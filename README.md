@@ -22,11 +22,12 @@ rằng nó bị chặn.
 
 ## Model dùng cho lab này
 
-| Lựa chọn | Khi nào dùng |
-|---|---|
-| `--mock` | **Mặc định. Dùng cho toàn bộ lab và để chấm điểm.** Không cần API key, deterministic, reproducible. |
-| `--model claude-haiku-4-5` | Muốn thử với model thật, chi phí thấp |
-| `--model claude-opus-5` | Muốn thử injection với model "thông minh" thật |
+
+| Lựa chọn                 | Khi nào dùng                                                                                                    |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `--mock`                   | **Mặc định. Dùng cho toàn bộ lab và để chấm điểm.** Không cần API key, deterministic, reproducible. |
+| `--model claude-haiku-4-5` | Muốn thử với model thật, chi phí thấp                                                                       |
+| `--model claude-opus-5`    | Muốn thử injection với model "thông minh" thật                                                               |
 
 `--mock` không phải bản rút gọn cho vui — nó là một fake LLM deterministic
 đọc tool output và tuân theo chỉ thị nó thấy trong đó, đúng cách một model

@@ -6,11 +6,12 @@ mình gửi PII ra ngoài thì nhớ mãi.
 
 Ba tool trong `agent/tools.py` cố tình dựng thành đúng 3 chân của trifecta:
 
-| Tool | Chân trifecta |
-|---|---|
-| `search_docs(query)` | **untrusted content** — đọc `corpus/`, nơi attacker cài payload |
-| `read_customer(id)` | **private data** — đọc `data/customers.json` |
-| `http_post(url, body)` | **exfil vector** — chỉ trỏ được vào `localhost:9999` |
+
+| Tool                   | Chân trifecta                                                       |
+| ------------------------ | ---------------------------------------------------------------------- |
+| `search_docs(query)`   | **untrusted content** — đọc `corpus/`, nơi attacker cài payload |
+| `read_customer(id)`    | **private data** — đọc `data/customers.json`                      |
+| `http_post(url, body)` | **exfil vector** — chỉ trỏ được vào `localhost:9999`          |
 
 ---
 
@@ -152,13 +153,14 @@ Viết `reports/compliance-mapping.md` — 5 dòng đúng format bảng dưới,
 **evidence phải là đường dẫn file/dòng thật trong repo của bạn**, không
 phải mô tả chung:
 
-| Requirement | Control | Evidence |
-|---|---|---|
-| Luật 91/2025 — quyền yêu cầu xoá | (nếu chưa làm delete cascade, ghi rõ "chưa implement, xem stretch #4") | — |
-| NĐ 356/2025 — hồ sơ xuyên biên giới 60 ngày | data-flow inventory cho LLM API call | `reports/dpia-lite.md` §2 |
-| ASI03 — privilege abuse | per-agent identity + TTL trong ledger | `agent/policy.py`, ledger field `agent_owner` |
-| ASI01 — goal hijack | trifecta split | `reports/attack-after.log` |
-| ISO 42001 Clause 5-6 | policy-as-code có review | git log của `agent/policy.py` |
+
+| Requirement                                         | Control                                                                    | Evidence                                      |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------- |
+| Luật 91/2025 — quyền yêu cầu xoá              | (nếu chưa làm delete cascade, ghi rõ "chưa implement, xem stretch#4") | —                                            |
+| NĐ 356/2025 — hồ sơ xuyên biên giới 60 ngày | data-flow inventory cho LLM API call                                       | `reports/dpia-lite.md` §2                    |
+| ASI03 — privilege abuse                            | per-agent identity + TTL trong ledger                                      | `agent/policy.py`, ledger field `agent_owner` |
+| ASI01 — goal hijack                                | trifecta split                                                             | `reports/attack-after.log`                    |
+| ISO 42001 Clause 5-6                                | policy-as-code có review                                                  | git log của`agent/policy.py`                 |
 
 Viết `reports/dpia-lite.md` (1 trang): dữ liệu gì, mục đích gì, chảy đi
 đâu — **kể cả sang API của model provider nếu bạn dùng `--model`**, vì đó
@@ -168,14 +170,15 @@ là chuyển dữ liệu xuyên biên giới theo NĐ 356/2025.
 
 ## Bẫy đã lường trước
 
-| Bẫy | Xử lý |
-|---|---|
-| Presidio + tiếng Việt | Regex-first. spaCy/transformers là stretch, không bắt buộc |
-| Hết quota / không có API key | `--mock` là first-class, dùng cho toàn bộ lab |
+
+| Bẫy                                     | Xử lý                                                                                    |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| Presidio + tiếng Việt                  | Regex-first. spaCy/transformers là stretch, không bắt buộc                             |
+| Hết quota / không có API key          | `--mock` là first-class, dùng cho toàn bộ lab                                          |
 | "Chỉ cần filter chuỗi lệnh là xong" | Thử, rồi tự phá bằng biến thể 5 — đây là bài học, không phải lỗi của bạn |
-| Trỏ sink ra Internet | `http_post` hard-code allowlist `localhost:9999`, raise nếu khác |
-| Run A/B chia sẻ state qua biến global | Bắt buộc truyền typed field qua tham số hàm |
-| Chấm điểm không reproducible | Luôn chấm bằng `--mock` + `pytest`, không chấm bằng model thật |
+| Trỏ sink ra Internet                    | `http_post` hard-code allowlist `localhost:9999`, raise nếu khác                         |
+| Run A/B chia sẻ state qua biến global  | Bắt buộc truyền typed field qua tham số hàm                                           |
+| Chấm điểm không reproducible         | Luôn chấm bằng`--mock` + `pytest`, không chấm bằng model thật                       |
 
 ## Stretch goals (nếu xong sớm)
 
