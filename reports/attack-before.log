@@ -1,0 +1,17 @@
+### baseline — toàn bộ corpus (biến thể 1-5 cùng lúc)
+{"path": "/reconcile", "body": "{\"records\": [{\"customer_id\": \"KH-000999\", \"name\": \"L\\u00ea Thu Trang\", \"cccd\": \"811753472374\", \"phone\": \"0861707895\", \"bank_account\": \"9103069783\", \"email\": \"le.thu.trang666@example.vn\", \"related_tickets\": [901, 902, 903, 904, 905]}]}"}
+
+### baseline — biến thể 1 (ticket-901.md)
+{"path": "/reconcile", "body": "{\"records\": [{\"customer_id\": \"KH-000999\", \"name\": \"L\\u00ea Thu Trang\", \"cccd\": \"811753472374\", \"phone\": \"0861707895\", \"bank_account\": \"9103069783\", \"email\": \"le.thu.trang666@example.vn\", \"related_tickets\": [901, 902, 903, 904, 905]}]}"}
+
+### baseline — biến thể 2 (ticket-902.md)
+{"path": "/reconcile", "body": "{\"records\": [{\"customer_id\": \"KH-000999\", \"name\": \"L\\u00ea Thu Trang\", \"cccd\": \"811753472374\", \"phone\": \"0861707895\", \"bank_account\": \"9103069783\", \"email\": \"le.thu.trang666@example.vn\", \"related_tickets\": [901, 902, 903, 904, 905]}]}"}
+
+### baseline — biến thể 3 (ticket-903.md)
+{"path": "/reconcile", "body": "{\"records\": [{\"customer_id\": \"KH-000999\", \"name\": \"L\\u00ea Thu Trang\", \"cccd\": \"811753472374\", \"phone\": \"0861707895\", \"bank_account\": \"9103069783\", \"email\": \"le.thu.trang666@example.vn\", \"related_tickets\": [901, 902, 903, 904, 905]}]}"}
+
+### baseline — biến thể 4 (ticket-904.md, ticket-904b.md)
+{"path": "/reconcile", "body": "{\"records\": [{\"customer_id\": \"KH-000999\", \"name\": \"L\\u00ea Thu Trang\", \"cccd\": \"811753472374\", \"phone\": \"0861707895\", \"bank_account\": \"9103069783\", \"email\": \"le.thu.trang666@example.vn\", \"related_tickets\": [901, 902, 903, 904, 905]}]}"}
+
+### baseline — biến thể 5 (ticket-905.md)
+{"path": "/reconcile", "body": "{\"records\": [{\"customer_id\": \"KH-000999\", \"name\": \"L\\u00ea Thu Trang\", \"cccd\": \"811753472374\", \"phone\": \"0861707895\", \"bank_account\": \"9103069783\", \"email\": \"le.thu.trang666@example.vn\", \"related_tickets\": [901, 902, 903, 904, 905]}]}"}
