@@ -33,12 +33,91 @@ rồi gọi verify() phải trả về False.
 """
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
+
+GENESIS_HASH = "0" * 64
+
+# Field bắt buộc cho mỗi dòng — thiếu bất kỳ field nào thì dòng đó vô dụng
+# khi regulator hỏi "ai gọi tool gì, lúc nào, được/không, vì sao".
+REQUIRED_FIELDS = (
+    "ts",
+    "agent_id",
+    "run_id",
+    "tool",
+    "args_hash",
+    "classification",
+    "decision",
+    "reason",
+)
+
+
+def _canonical(entry: dict) -> str:
+    """Chuỗi để băm: chính nội dung dòng NHƯNG bỏ field `hash` ra ngoài.
+
+    sort_keys=True để thứ tự field trong file không ảnh hưởng kết quả băm.
+    """
+    payload = {k: v for k, v in entry.items() if k != "hash"}
+    return json.dumps(payload, sort_keys=True, ensure_ascii=False)
+
+
+def _hash(entry: dict) -> str:
+    return hashlib.sha256(_canonical(entry).encode("utf-8")).hexdigest()
+
+
+def _last_hash(path: Path) -> str:
+    if not path.exists():
+        return GENESIS_HASH
+    lines = [ln for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+    if not lines:
+        return GENESIS_HASH
+    return json.loads(lines[-1]).get("hash", GENESIS_HASH)
 
 
 def append(entry: dict, path: Path) -> dict:
-    raise NotImplementedError("BƯỚC 3d: implement ledger append")
+    """Append-only: ghi 1 dòng JSONL, móc xích hash vào dòng trước đó."""
+    path = Path(path)
+    # Cố tình KHÔNG raise khi entry thiếu field: ledger ghi lại đúng những gì
+    # caller đưa xuống, còn việc "dòng này có hợp lệ không" là câu hỏi của
+    # verify(). Một ledger tự ý từ chối ghi sẽ giấu mất chính bằng chứng là
+    # runner đã log thiếu.
+    record = dict(entry)
+    record["prev_hash"] = _last_hash(path)
+    record["hash"] = _hash(record)
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(record, ensure_ascii=False) + "\n")
+    return record
 
 
 def verify(path: Path) -> bool:
-    raise NotImplementedError("BƯỚC 3d: implement ledger verify")
+    """True nếu chuỗi hash liền mạch VÀ mọi dòng có reason non-empty.
+
+    Sửa/xoá/chèn một dòng bất kỳ đều làm hàm này trả về False: dòng bị sửa
+    hỏng hash của chính nó, và mọi dòng sau đó hỏng liên kết prev_hash.
+    """
+    path = Path(path)
+    if not path.exists():
+        return False
+
+    expected_prev = GENESIS_HASH
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            return False
+
+        if any(not str(record.get(f, "")).strip() for f in REQUIRED_FIELDS):
+            return False
+        if record.get("prev_hash") != expected_prev:
+            return False
+        if record.get("hash") != _hash(record):
+            return False
+
+        expected_prev = record["hash"]
+
+    return True
